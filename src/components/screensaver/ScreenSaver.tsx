@@ -14,8 +14,6 @@ import {
   Moon,
   ChevronRight,
   ChevronLeft,
-  ChevronUp,
-  Sliders,
   Monitor,
   Sunset,
   CloudRain,
@@ -1048,26 +1046,8 @@ export const ScreenSaver: React.FC<ScreenSaverProps> = ({ isActive, onClose, ini
             setShowControls(false);
           }, 1200);
         }}
-        className="absolute bottom-0 left-0 right-0 pt-12 pb-6 px-4 flex flex-col items-center justify-end z-40 pointer-events-auto group/screensaver-hud"
+        className="absolute bottom-0 left-0 right-0 pt-16 pb-6 px-4 flex flex-col items-center justify-end z-40 pointer-events-auto"
       >
-        {/* Subtle trigger tab when hidden: displayed at bottom center */}
-        <div 
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowControls(true);
-          }}
-          className={`flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-950/80 border border-slate-800 text-xs font-mono text-slate-400 backdrop-blur-md shadow-lg transition-all duration-300 cursor-pointer ${
-            showControls || isHudHovered 
-              ? 'opacity-0 translate-y-4 pointer-events-none h-0 p-0 overflow-hidden m-0 border-0' 
-              : 'opacity-60 hover:opacity-100 hover:border-cyan-500/50 hover:text-cyan-300 group-hover/screensaver-hud:opacity-100 translate-y-0 mb-1'
-          }`}
-          title="Hover or click to display screensaver controls"
-        >
-          <Sliders className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Hover to display controls & themes (14 effects)</span>
-          <ChevronUp className="w-3 h-3 text-slate-500" />
-        </div>
-
         {/* Control HUD (appears on hover or mouse move) */}
         <div 
           className={`w-full max-w-4xl transition-all duration-300 ease-out transform ${

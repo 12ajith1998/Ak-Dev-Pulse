@@ -113,6 +113,77 @@ export const ChecklistHub: React.FC = () => {
     audioService.playBeep(400, 0.05);
   };
 
+  const handleDeleteRunbook = (runbookId: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const runbookToDelete = checklists.find((c) => c.id === runbookId);
+    if (!runbookToDelete) return;
+
+    if (confirm(`Delete runbook "${runbookToDelete.title}"?`)) {
+      const remaining = checklists.filter((c) => c.id !== runbookId);
+      if (remaining.length === 0) {
+        const defaultFallback: ChecklistTemplate = {
+          id: 'custom-' + Date.now(),
+          title: 'General Engineering Sanity Checklist',
+          description: 'Basic sanity and task verification steps',
+          category: 'custom',
+          items: [{ id: 'item-1', text: 'Step 1: Define objective and requirements', completed: false }],
+        };
+        saveUpdated([defaultFallback]);
+        setActiveChecklistId(defaultFallback.id);
+      } else {
+        saveUpdated(remaining);
+        if (activeChecklistId === runbookId) {
+          setActiveChecklistId(remaining[0].id);
+        }
+      }
+      audioService.playBeep(400, 0.07);
+    }
+  };
+
+  const handleClearCompletedItems = () => {
+    const completedItems = activeChecklist.items.filter((i) => i.completed);
+    if (completedItems.length === 0) return;
+    if (confirm(`Delete all ${completedItems.length} completed verification step(s)?`)) {
+      const updated = checklists.map((c) => {
+        if (c.id === activeChecklistId) {
+          return {
+            ...c,
+            items: c.items.filter((i) => !i.completed),
+          };
+        }
+        return c;
+      });
+      saveUpdated(updated);
+      audioService.playBeep(450, 0.05);
+    }
+  };
+
+  const handleClearAllItems = () => {
+    if (activeChecklist.items.length === 0) return;
+    if (confirm(`Delete all ${activeChecklist.items.length} step(s) in "${activeChecklist.title}"?`)) {
+      const updated = checklists.map((c) => {
+        if (c.id === activeChecklistId) {
+          return {
+            ...c,
+            items: [],
+          };
+        }
+        return c;
+      });
+      saveUpdated(updated);
+      audioService.playBeep(400, 0.07);
+    }
+  };
+
+  const handleRestoreDefaults = () => {
+    if (confirm('Restore default production and engineering runbooks? Custom runbooks will be overwritten.')) {
+      const defaults = storageService.getDefaultChecklists();
+      saveUpdated(defaults);
+      setActiveChecklistId(defaults[0]?.id || '');
+      audioService.playSuccessTone();
+    }
+  };
+
   const handleCreateRunbook = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newRunbookTitle.trim()) return;
@@ -243,8 +314,15 @@ export const ChecklistHub: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Sidebar: Checklist Catalog (4 cols) */}
         <div className="lg:col-span-4 space-y-2">
-          <div className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider px-1">
-            Available Runbooks ({checklists.length})
+          <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-400 uppercase tracking-wider px-1">
+            <span>Available Runbooks ({checklists.length})</span>
+            <button
+              onClick={handleRestoreDefaults}
+              className="text-[10px] text-slate-500 hover:text-emerald-400 normal-case font-normal transition-colors cursor-pointer"
+              title="Reset all runbooks to standard production defaults"
+            >
+              Restore Defaults
+            </button>
           </div>
           <div className="space-y-1.5">
             {checklists.map((template) => {
@@ -259,19 +337,27 @@ export const ChecklistHub: React.FC = () => {
                     setActiveChecklistId(template.id);
                     audioService.playBeep(750, 0.03);
                   }}
-                  className={`p-3 rounded-xl cursor-pointer border transition-all ${
+                  className={`p-3 rounded-xl cursor-pointer border transition-all relative group ${
                     isSelected
                       ? 'bg-slate-900 border-emerald-500/50 shadow-[0_0_12px_rgba(16,185,129,0.12)]'
                       : 'bg-slate-950/60 border-slate-800/80 hover:bg-slate-900/60 hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
                       {getCategoryIcon(template.category)}
-                      <h4 className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                      <h4 className={`text-xs font-bold truncate ${isSelected ? 'text-white' : 'text-slate-300'}`}>
                         {template.title}
                       </h4>
                     </div>
+
+                    <button
+                      onClick={(e) => handleDeleteRunbook(template.id, e)}
+                      className="p-1 rounded text-slate-500 hover:text-rose-400 hover:bg-rose-950/60 transition-colors shrink-0 cursor-pointer"
+                      title={`Delete "${template.title}" runbook`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
                   <p className="text-[11px] text-slate-500 mt-1 line-clamp-1">
@@ -313,10 +399,41 @@ export const ChecklistHub: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center flex-wrap gap-2">
+                {completedCount > 0 && (
+                  <button
+                    onClick={handleClearCompletedItems}
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/50 text-rose-300 text-xs font-mono transition-colors cursor-pointer"
+                    title="Delete completed verification steps"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Clear Done ({completedCount})</span>
+                  </button>
+                )}
+
+                {activeChecklist.items.length > 0 && (
+                  <button
+                    onClick={handleClearAllItems}
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-rose-950/50 hover:text-rose-300 text-slate-400 text-xs font-mono border border-slate-700 transition-colors cursor-pointer"
+                    title="Delete all steps in this runbook"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Clear Steps</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={() => handleDeleteRunbook(activeChecklist.id)}
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-950/30 hover:bg-rose-900/60 border border-rose-800/40 text-rose-300 text-xs font-mono transition-colors cursor-pointer"
+                  title="Delete this entire runbook"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  <span>Delete Runbook</span>
+                </button>
+
                 <button
                   onClick={resetActiveChecklist}
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors"
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer"
                   title="Uncheck all items"
                 >
                   <RotateCcw className="w-3 h-3 text-slate-400" />
@@ -324,7 +441,7 @@ export const ChecklistHub: React.FC = () => {
                 </button>
                 <button
                   onClick={handleCopyMarkdown}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono transition-colors cursor-pointer"
                   title="Copy as Markdown for Slack / Jira ticket"
                 >
                   {copyFeedback ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
@@ -385,15 +502,19 @@ export const ChecklistHub: React.FC = () => {
                         {item.notes && (
                           <button
                             onClick={() => setExpandedNotes({ ...expandedNotes, [item.id]: !isNotesOpen })}
-                            className="text-slate-500 hover:text-cyan-400 p-1 text-xs"
+                            className="text-slate-500 hover:text-cyan-400 p-1 text-xs cursor-pointer"
                             title="Toggle technical notes"
                           >
                             {isNotesOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                           </button>
                         )}
                         <button
-                          onClick={() => handleDeleteItem(item.id)}
-                          className="opacity-0 group-hover:opacity-100 text-slate-600 hover:text-rose-400 p-1 transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteItem(item.id);
+                          }}
+                          className="text-slate-500 hover:text-rose-400 hover:bg-rose-950/60 p-1.5 rounded-lg transition-colors cursor-pointer"
+                          title="Delete this verification step"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -422,7 +543,7 @@ export const ChecklistHub: React.FC = () => {
               />
               <button
                 type="submit"
-                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium"
+                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium cursor-pointer"
               >
                 Add Step
               </button>

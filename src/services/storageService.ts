@@ -291,6 +291,9 @@ export const storageService = {
       console.error(e);
     }
   },
+  getDefaultChecklists(): ChecklistTemplate[] {
+    return JSON.parse(JSON.stringify(INITIAL_CHECKLISTS));
+  },
 
   // Alarms
   getAlarms(): AlarmItem[] {

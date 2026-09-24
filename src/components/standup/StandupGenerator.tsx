@@ -18,7 +18,8 @@ import {
   Send,
   History,
   FileText,
-  ExternalLink
+  ExternalLink,
+  X
 } from 'lucide-react';
 
 interface StandupGeneratorProps {
@@ -247,6 +248,41 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
     alert('Standup recorded to history! You can view past updates anytime.');
   };
 
+  // Delete single history entry
+  const handleDeleteHistoryEntry = (id: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (confirm('Delete this standup archive?')) {
+      const updated = history.filter((h) => h.id !== id);
+      setHistory(updated);
+      storageService.saveStandups(updated);
+      audioService.playBeep(450, 0.05);
+    }
+  };
+
+  // Delete all history
+  const handleClearAllHistory = () => {
+    if (history.length === 0) return;
+    if (confirm(`Delete all ${history.length} archived standups? This cannot be undone.`)) {
+      setHistory([]);
+      storageService.saveStandups([]);
+      audioService.playBeep(400, 0.08);
+    }
+  };
+
+  // Reset entire draft
+  const handleClearAllDraft = () => {
+    if (confirm('Reset and clear all standup draft fields?')) {
+      setYesterdayItems([]);
+      setTodayItems([]);
+      setBlockerItems([]);
+      setTickets([]);
+      setSprintGoal('');
+      setPolishedOutput('');
+      storageService.saveStandupDraft({});
+      audioService.playBeep(400, 0.06);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header Banner */}
@@ -264,10 +300,19 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center flex-wrap gap-2">
+          <button
+            onClick={handleClearAllDraft}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800/80 hover:bg-rose-950/60 hover:border-rose-700/60 text-slate-300 hover:text-rose-300 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
+            title="Delete all inputs in draft"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Reset Draft</span>
+          </button>
+
           <button
             onClick={() => setShowHistory(!showHistory)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
           >
             <History className="w-3.5 h-3.5 text-cyan-400" />
             <span>{showHistory ? 'Hide History' : 'Standup History'} ({history.length})</span>
@@ -275,7 +320,7 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
 
           <button
             onClick={handleSaveToHistory}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium transition-all shadow-sm"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium transition-all shadow-sm cursor-pointer"
           >
             <Send className="w-3.5 h-3.5" />
             <span>Archive Today's Update</span>
@@ -291,7 +336,19 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
               <Calendar className="w-4 h-4 text-cyan-400" />
               <span>Previous Standup Submissions</span>
             </h3>
-            <span className="text-xs text-slate-400 font-mono">Archived in LocalStorage</span>
+            <div className="flex items-center gap-3">
+              {history.length > 0 && (
+                <button
+                  onClick={handleClearAllHistory}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/50 text-rose-300 text-xs font-mono transition-colors cursor-pointer"
+                  title="Delete all archived standups"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  <span>Clear All History</span>
+                </button>
+              )}
+              <span className="text-xs text-slate-400 font-mono">Archived in LocalStorage</span>
+            </div>
           </div>
 
           {history.length === 0 ? (
@@ -299,10 +356,19 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-72 overflow-y-auto pr-1">
               {history.map((h) => (
-                <div key={h.id} className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 text-xs space-y-2">
+                <div key={h.id} className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 text-xs space-y-2 relative group">
                   <div className="flex items-center justify-between text-slate-400 font-mono">
                     <span className="font-semibold text-cyan-400">{h.date}</span>
-                    <span>{h.submittedAt}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span>{h.submittedAt}</span>
+                      <button
+                        onClick={(e) => handleDeleteHistoryEntry(h.id, e)}
+                        className="p-1 rounded bg-slate-800/80 hover:bg-rose-900/60 text-slate-400 hover:text-rose-300 transition-colors cursor-pointer"
+                        title="Delete this standup entry"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
                   </div>
                   <div className="space-y-1 text-slate-300">
                     <div className="font-medium text-emerald-400 text-[11px]">Yesterday ({h.yesterday.length}):</div>
@@ -318,7 +384,7 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                         alert('Archived standup copied to clipboard!');
                       }
                     }}
-                    className="w-full mt-2 py-1 px-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center gap-1 text-[11px]"
+                    className="w-full mt-2 py-1 px-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center gap-1 text-[11px] cursor-pointer"
                   >
                     <Copy className="w-3 h-3" />
                     <span>Copy Text</span>
@@ -341,15 +407,44 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                 <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
                 Active Sprint Objective
               </label>
-              <span className="text-[11px] text-slate-500 font-mono">Context for Team</span>
+              <div className="flex items-center gap-2">
+                {sprintGoal && (
+                  <button
+                    onClick={() => {
+                      setSprintGoal('');
+                      audioService.playBeep(450, 0.03);
+                    }}
+                    className="flex items-center gap-1 text-[11px] font-mono text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
+                    title="Clear sprint objective"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Clear Goal</span>
+                  </button>
+                )}
+                <span className="text-[11px] text-slate-500 font-mono">Context for Team</span>
+              </div>
             </div>
-            <input
-              type="text"
-              value={sprintGoal}
-              onChange={(e) => setSprintGoal(e.target.value)}
-              placeholder="e.g. Sprint 14: Finish DB migration and improve latency"
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500/50"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                value={sprintGoal}
+                onChange={(e) => setSprintGoal(e.target.value)}
+                placeholder="e.g. Sprint 14: Finish DB migration and improve latency"
+                className="w-full px-3 py-2 pr-8 rounded-lg bg-slate-950 border border-slate-800 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500/50"
+              />
+              {sprintGoal && (
+                <button
+                  onClick={() => {
+                    setSprintGoal('');
+                    audioService.playBeep(450, 0.03);
+                  }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-rose-400 p-0.5 rounded transition-colors cursor-pointer"
+                  title="Clear text"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
 
             {/* JIRA / PR Tickets */}
             <div className="pt-2 border-t border-slate-800/60 flex flex-wrap items-center gap-2">
@@ -362,12 +457,25 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                   {t}
                   <button
                     onClick={() => handleRemoveTicket(t)}
-                    className="hover:text-rose-400 ml-0.5"
+                    className="hover:text-rose-400 ml-0.5 cursor-pointer"
+                    title={`Delete ticket ${t}`}
                   >
                     ×
                   </button>
                 </span>
               ))}
+              {tickets.length > 0 && (
+                <button
+                  onClick={() => {
+                    setTickets([]);
+                    audioService.playBeep(450, 0.03);
+                  }}
+                  className="text-[11px] font-mono text-slate-500 hover:text-rose-400 px-1 py-0.5 rounded transition-colors cursor-pointer ml-auto"
+                  title="Delete all tickets"
+                >
+                  Clear Tickets
+                </button>
+              )}
               <div className="inline-flex items-center gap-1">
                 <input
                   type="text"
@@ -379,7 +487,7 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                 />
                 <button
                   onClick={handleAddTicket}
-                  className="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-xs text-slate-300"
+                  className="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 cursor-pointer"
                 >
                   Add
                 </button>
@@ -394,14 +502,31 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <h3 className="text-sm font-semibold text-white">What did you accomplish yesterday?</h3>
               </div>
-              <button
-                onClick={handleImportCompletedTasks}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 hover:bg-emerald-900/60 text-xs font-mono transition-colors"
-                title="Auto-fill with tasks marked 'done' in your Kanban board"
-              >
-                <Download className="w-3 h-3" />
-                <span>Import from Done Tasks</span>
-              </button>
+              <div className="flex items-center gap-2">
+                {yesterdayItems.length > 0 && (
+                  <button
+                    onClick={() => {
+                      if (confirm(`Delete all ${yesterdayItems.length} yesterday items?`)) {
+                        setYesterdayItems([]);
+                        audioService.playBeep(450, 0.04);
+                      }
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 rounded bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900/60 text-rose-300 text-xs font-mono transition-colors cursor-pointer"
+                    title="Delete all items in Yesterday's section"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Clear All ({yesterdayItems.length})</span>
+                  </button>
+                )}
+                <button
+                  onClick={handleImportCompletedTasks}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 hover:bg-emerald-900/60 text-xs font-mono transition-colors cursor-pointer"
+                  title="Auto-fill with tasks marked 'done' in your Kanban board"
+                >
+                  <Download className="w-3 h-3" />
+                  <span>Import Done Tasks</span>
+                </button>
+              </div>
             </div>
 
             <div className="space-y-1.5">
@@ -419,8 +544,12 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                     className="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-950/80 border border-slate-800/80 text-xs text-slate-200 focus:outline-none focus:border-emerald-500/50"
                   />
                   <button
-                    onClick={() => setYesterdayItems(yesterdayItems.filter((_, i) => i !== idx))}
-                    className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-400 p-1 transition-opacity"
+                    onClick={() => {
+                      setYesterdayItems(yesterdayItems.filter((_, i) => i !== idx));
+                      audioService.playBeep(450, 0.03);
+                    }}
+                    className="text-slate-500 hover:text-rose-400 hover:bg-rose-950/50 p-1.5 rounded-lg transition-colors cursor-pointer"
+                    title="Delete this item"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -450,7 +579,7 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                       setRawNewYesterday('');
                     }
                   }}
-                  className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300"
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
@@ -465,14 +594,31 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                 <ArrowRight className="w-4 h-4 text-cyan-400" />
                 <h3 className="text-sm font-semibold text-white">What will you work on today?</h3>
               </div>
-              <button
-                onClick={handleImportInProgressTasks}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 hover:bg-cyan-900/60 text-xs font-mono transition-colors"
-                title="Auto-fill with In-Progress / Review tasks from Kanban"
-              >
-                <Download className="w-3 h-3" />
-                <span>Import from In-Progress</span>
-              </button>
+              <div className="flex items-center gap-2">
+                {todayItems.length > 0 && (
+                  <button
+                    onClick={() => {
+                      if (confirm(`Delete all ${todayItems.length} today items?`)) {
+                        setTodayItems([]);
+                        audioService.playBeep(450, 0.04);
+                      }
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 rounded bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900/60 text-rose-300 text-xs font-mono transition-colors cursor-pointer"
+                    title="Delete all items in Today's section"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Clear All ({todayItems.length})</span>
+                  </button>
+                )}
+                <button
+                  onClick={handleImportInProgressTasks}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 hover:bg-cyan-900/60 text-xs font-mono transition-colors cursor-pointer"
+                  title="Auto-fill with In-Progress / Review tasks from Kanban"
+                >
+                  <Download className="w-3 h-3" />
+                  <span>Import In-Progress</span>
+                </button>
+              </div>
             </div>
 
             <div className="space-y-1.5">
@@ -490,8 +636,12 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                     className="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-950/80 border border-slate-800/80 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
                   />
                   <button
-                    onClick={() => setTodayItems(todayItems.filter((_, i) => i !== idx))}
-                    className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-400 p-1 transition-opacity"
+                    onClick={() => {
+                      setTodayItems(todayItems.filter((_, i) => i !== idx));
+                      audioService.playBeep(450, 0.03);
+                    }}
+                    className="text-slate-500 hover:text-rose-400 hover:bg-rose-950/50 p-1.5 rounded-lg transition-colors cursor-pointer"
+                    title="Delete this item"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -521,7 +671,7 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                       setRawNewToday('');
                     }
                   }}
-                  className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300"
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
@@ -536,7 +686,22 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                 <AlertCircle className="w-4 h-4 text-amber-400" />
                 <h3 className="text-sm font-semibold text-white">Any blockers or impediments?</h3>
               </div>
-              <span className="text-[11px] text-slate-500 font-mono">Keep it actionable</span>
+              <div className="flex items-center gap-2">
+                {blockerItems.length > 0 && (
+                  <button
+                    onClick={() => {
+                      setBlockerItems([]);
+                      audioService.playBeep(450, 0.04);
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 rounded bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900/60 text-rose-300 text-xs font-mono transition-colors cursor-pointer"
+                    title="Clear all blockers"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Clear Blockers ({blockerItems.length})</span>
+                  </button>
+                )}
+                <span className="text-[11px] text-slate-500 font-mono">Keep it actionable</span>
+              </div>
             </div>
 
             {/* Quick preset badges */}
@@ -558,7 +723,7 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                       addPresetBlocker(preset);
                     }
                   }}
-                  className="px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] border border-slate-700/60 transition-colors"
+                  className="px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] border border-slate-700/60 transition-colors cursor-pointer"
                 >
                   + {preset}
                 </button>
@@ -586,8 +751,12 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                       className="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-950/80 border border-slate-800/80 text-xs text-amber-200 focus:outline-none focus:border-amber-500/50"
                     />
                     <button
-                      onClick={() => setBlockerItems(blockerItems.filter((_, i) => i !== idx))}
-                      className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-400 p-1 transition-opacity"
+                      onClick={() => {
+                        setBlockerItems(blockerItems.filter((_, i) => i !== idx));
+                        audioService.playBeep(450, 0.03);
+                      }}
+                      className="text-slate-500 hover:text-rose-400 hover:bg-rose-950/50 p-1.5 rounded-lg transition-colors cursor-pointer"
+                      title="Delete this blocker"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -618,7 +787,7 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                       setRawNewBlocker('');
                     }
                   }}
-                  className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300"
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
@@ -632,9 +801,24 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
           <div className="p-4 rounded-xl bg-slate-900 border border-cyan-900/40 shadow-xl space-y-4">
             {/* Top Toolbar */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-white">
-                <FileText className="w-4 h-4 text-cyan-400" />
-                <span>Synchronized Output</span>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-white">
+                  <FileText className="w-4 h-4 text-cyan-400" />
+                  <span>Synchronized Output</span>
+                </div>
+                {polishedOutput && (
+                  <button
+                    onClick={() => {
+                      setPolishedOutput('');
+                      audioService.playBeep(450, 0.03);
+                    }}
+                    className="flex items-center gap-1 px-2 py-0.5 rounded bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/40 text-rose-300 text-[11px] font-mono transition-colors cursor-pointer"
+                    title="Clear custom polished text and reset to default preview"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Clear Polish</span>
+                  </button>
+                )}
               </div>
 
               {/* AI Polish Button with High Thinking badge */}
@@ -716,19 +900,12 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
                 Tip: Paste directly into #daily-standup in Slack or Teams.
               </span>
               <button
-                onClick={() => {
-                  setYesterdayItems([]);
-                  setTodayItems([]);
-                  setBlockerItems([]);
-                  setTickets([]);
-                  setPolishedOutput('');
-                  storageService.saveStandupDraft({});
-                  audioService.playBeep(500, 0.05);
-                }}
-                className="text-slate-500 hover:text-rose-400 transition-colors text-[11px] flex items-center gap-1"
+                onClick={handleClearAllDraft}
+                className="text-slate-500 hover:text-rose-400 transition-colors text-[11px] flex items-center gap-1 cursor-pointer"
+                title="Delete all inputs and reset draft"
               >
-                <RefreshCw className="w-3 h-3" />
-                <span>Clear Draft</span>
+                <Trash2 className="w-3 h-3" />
+                <span>Reset / Clear Draft</span>
               </button>
             </div>
           </div>
