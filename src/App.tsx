@@ -22,16 +22,20 @@ import { RelaxingMusicPlayer } from './components/music/RelaxingMusicPlayer';
 import { AIChatPage } from './components/ai/AIChatPage';
 import { DeveloperProfile } from './components/profile/DeveloperProfile';
 import { DataModal } from './components/modals/DataModal';
-import { StyleStudioModal, UIStyleConfig } from './components/modals/StyleStudioModal';
+import { StyleStudioModal, UIStyleConfig, ACCENT_COLOR_MAP, FONT_OPTIONS } from './components/modals/StyleStudioModal';
 import { PanelLeftOpen } from 'lucide-react';
 
 const DEFAULT_STYLE_CONFIG: UIStyleConfig = {
-  fontFamily: 'jakarta', // Plus Jakarta Sans (Modern crisp typography)
+  fontFamily: 'jakarta',
   accentColor: 'cyan',
+  bgTone: 'slate',
+  uiScale: 'balanced',
   enableCyberGrid: true,
   enableAmbientSpotlight: true,
   enableCrtScanlines: false,
   enableGlassCards: true,
+  enableNeonGlow: true,
+  enableAnimatedStars: false,
 };
 
 export default function App() {
@@ -78,16 +82,9 @@ export default function App() {
   const [isDataModalOpen, setIsDataModalOpen] = useState<boolean>(false);
 
   // Sync style configuration to CSS variables and document
+  // Persist style configuration
   useEffect(() => {
     localStorage.setItem('devpulse_style_config_v1', JSON.stringify(styleConfig));
-    const fontMap = {
-      jakarta: "'Plus Jakarta Sans', system-ui, sans-serif",
-      outfit: "'Outfit', system-ui, sans-serif",
-      space: "'Space Grotesk', system-ui, sans-serif",
-      mono: "'JetBrains Mono', monospace",
-    };
-    document.documentElement.style.setProperty('--font-primary', fontMap[styleConfig.fontFamily]);
-    document.body.style.fontFamily = fontMap[styleConfig.fontFamily];
   }, [styleConfig]);
 
   // Save sidebar preferences
@@ -240,26 +237,64 @@ export default function App() {
     }
   };
 
+  // Live UI Style Synchronization
+  useEffect(() => {
+    try {
+      const root = document.documentElement;
+      const accent = ACCENT_COLOR_MAP[styleConfig.accentColor] || ACCENT_COLOR_MAP.cyan;
+      const font = FONT_OPTIONS.find((f) => f.id === styleConfig.fontFamily) || FONT_OPTIONS[0];
+
+      root.style.setProperty('--color-accent', accent.hex);
+      root.style.setProperty('--color-accent-rgb', accent.rgb);
+      root.style.setProperty('--font-primary', font.cssFont);
+      root.style.setProperty('--font-heading', font.cssFont);
+
+      localStorage.setItem('devpulse_style_config_v1', JSON.stringify(styleConfig));
+    } catch (e) {
+      console.error('Failed to sync style variables', e);
+    }
+  }, [styleConfig]);
+
   const getSpotlightClass = () => {
     switch (styleConfig.accentColor) {
-      case 'emerald':
-        return 'bg-radial-spotlight-emerald';
-      case 'purple':
-        return 'bg-radial-spotlight-purple';
-      case 'amber':
-        return 'bg-radial-spotlight-amber';
+      case 'emerald': return 'bg-radial-spotlight-emerald';
+      case 'purple': return 'bg-radial-spotlight-purple';
+      case 'amber': return 'bg-radial-spotlight-amber';
+      case 'rose': return 'bg-radial-spotlight-rose';
+      case 'blue': return 'bg-radial-spotlight-blue';
+      case 'orange': return 'bg-radial-spotlight-orange';
+      case 'crimson': return 'bg-radial-spotlight-crimson';
       case 'cyan':
-      default:
-        return 'bg-radial-spotlight';
+      default: return 'bg-radial-spotlight-cyan';
     }
   };
 
   return (
     <div 
-      className={`min-h-screen bg-slate-950 text-slate-100 flex flex-row selection:bg-cyan-500/30 selection:text-cyan-200 relative ${
+      className={`min-h-screen text-slate-100 flex flex-row relative transition-colors duration-300 font-fam-${styleConfig.fontFamily} bg-tone-${styleConfig.bgTone || 'slate'} ui-density-${styleConfig.uiScale || 'balanced'} ${
         styleConfig.enableCyberGrid ? 'bg-cyber-grid' : ''
       }`}
     >
+      {/* Animated Cosmic Starfield Particles (if toggled) */}
+      {styleConfig.enableAnimatedStars && (
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          {Array.from({ length: 32 }).map((_, i) => (
+            <div
+              key={i}
+              className="star-particle absolute rounded-full bg-white"
+              style={{
+                top: `${(i * 19) % 100}%`,
+                left: `${(i * 29) % 100}%`,
+                width: `${(i % 3) + 1.5}px`,
+                height: `${(i % 3) + 1.5}px`,
+                animationDelay: `${(i * 0.35) % 4}s`,
+                opacity: 0.3 + (i % 4) * 0.15,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Dynamic Ambient Spotlight Glow */}
       {styleConfig.enableAmbientSpotlight && (
         <div 

@@ -133,11 +133,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               onOpenStyleStudio();
               audioService.playSuccessTone();
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-950/60 to-slate-900 border border-cyan-700/50 hover:border-cyan-400 text-cyan-300 hover:text-white text-xs font-mono transition-all shadow-sm active:scale-95 group"
-            title="Customize Font & UI Atmosphere Effects"
+            style={{
+              borderColor: 'rgba(var(--color-accent-rgb), 0.45)',
+              color: 'var(--color-accent)',
+            }}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900/90 border hover:bg-slate-850 hover:border-white/50 text-xs font-mono transition-all shadow-sm active:scale-95 group cursor-pointer"
+            title="UI Style Studio (Fonts, Themes, Atmosphere Shaders)"
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
-            <span className="hidden lg:inline">Style & Effects</span>
+            <Sparkles className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
+            <span className="hidden lg:inline">Style Studio</span>
+            <span 
+              className="w-1.5 h-1.5 rounded-full animate-pulse" 
+              style={{ backgroundColor: 'var(--color-accent)' }} 
+            />
           </button>
 
           {/* Active Timer Pill */}

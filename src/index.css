@@ -5,6 +5,9 @@
     --font-primary: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     --font-heading: 'Space Grotesk', system-ui, -apple-system, sans-serif;
     --font-code: 'JetBrains Mono', monospace;
+    --color-accent: #06b6d4;
+    --color-accent-rgb: 6, 182, 212;
+    --color-accent-hover: #22d3ee;
   }
 
   body {
@@ -25,51 +28,152 @@
   }
 }
 
+/* Dynamic Font Family Classes */
+.font-fam-jakarta {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+}
+.font-fam-jakarta h1, .font-fam-jakarta h2, .font-fam-jakarta h3, .font-fam-jakarta .font-heading {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+}
+
+.font-fam-outfit {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif !important;
+}
+.font-fam-outfit h1, .font-fam-outfit h2, .font-fam-outfit h3, .font-fam-outfit .font-heading {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif !important;
+}
+
+.font-fam-space {
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif !important;
+}
+.font-fam-space h1, .font-fam-space h2, .font-fam-space h3, .font-fam-space .font-heading {
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif !important;
+}
+
+.font-fam-mono {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+.font-fam-mono h1, .font-fam-mono h2, .font-fam-mono h3, .font-fam-mono .font-heading {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.font-fam-fira {
+  font-family: 'Fira Code', monospace !important;
+}
+.font-fam-fira h1, .font-fam-fira h2, .font-fam-fira h3, .font-fam-fira .font-heading {
+  font-family: 'Fira Code', monospace !important;
+}
+
+.font-fam-inter {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+.font-fam-inter h1, .font-fam-inter h2, .font-fam-inter h3, .font-fam-inter .font-heading {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+
+.font-fam-orbitron {
+  font-family: 'Orbitron', monospace, sans-serif !important;
+}
+.font-fam-orbitron h1, .font-fam-orbitron h2, .font-fam-orbitron h3, .font-fam-orbitron .font-heading {
+  font-family: 'Orbitron', monospace, sans-serif !important;
+}
+
+.font-fam-syne {
+  font-family: 'Syne', system-ui, -apple-system, sans-serif !important;
+}
+.font-fam-syne h1, .font-fam-syne h2, .font-fam-syne h3, .font-fam-syne .font-heading {
+  font-family: 'Syne', system-ui, -apple-system, sans-serif !important;
+}
+
+/* Background Tone Classes */
+.bg-tone-slate {
+  background-color: #020617 !important;
+}
+.bg-tone-zinc {
+  background-color: #09090b !important;
+}
+.bg-tone-pitch {
+  background-color: #000000 !important;
+}
+.bg-tone-cybernavy {
+  background-color: #020c1b !important;
+}
+
+/* UI Density / Scaling Classes */
+.ui-density-compact {
+  font-size: 0.915rem;
+}
+.ui-density-balanced {
+  font-size: 1rem;
+}
+.ui-density-comfortable {
+  font-size: 1.065rem;
+}
+
+/* Dynamic Accent Glow Color Utility */
+.glow-accent {
+  box-shadow: 0 0 20px -3px rgba(var(--color-accent-rgb), 0.45) !important;
+}
+
+.border-accent-active {
+  border-color: rgba(var(--color-accent-rgb), 0.8) !important;
+}
+
 /* Custom UI Effects & Cyber Grids */
 .bg-cyber-grid {
   background-size: 48px 48px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
 }
 
-.bg-radial-spotlight {
-  background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12) 0%, rgba(15, 23, 42, 0) 70%);
+/* Radial Spotlights for all theme accents */
+.bg-radial-spotlight-cyan {
+  background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.16) 0%, rgba(15, 23, 42, 0) 70%);
 }
-
 .bg-radial-spotlight-emerald {
-  background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0) 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.16) 0%, rgba(15, 23, 42, 0) 70%);
 }
-
 .bg-radial-spotlight-purple {
-  background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.12) 0%, rgba(15, 23, 42, 0) 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.16) 0%, rgba(15, 23, 42, 0) 70%);
 }
-
 .bg-radial-spotlight-amber {
-  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0) 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.16) 0%, rgba(15, 23, 42, 0) 70%);
+}
+.bg-radial-spotlight-rose {
+  background: radial-gradient(circle at 50% 0%, rgba(244, 63, 94, 0.16) 0%, rgba(15, 23, 42, 0) 70%);
+}
+.bg-radial-spotlight-blue {
+  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.16) 0%, rgba(15, 23, 42, 0) 70%);
+}
+.bg-radial-spotlight-orange {
+  background: radial-gradient(circle at 50% 0%, rgba(234, 88, 12, 0.16) 0%, rgba(15, 23, 42, 0) 70%);
+}
+.bg-radial-spotlight-crimson {
+  background: radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.16) 0%, rgba(15, 23, 42, 0) 70%);
 }
 
 /* Glassmorphism Card Style */
 .glass-panel {
   background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 .glass-panel-interactive {
   background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.07);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-interactive:hover {
   background: rgba(30, 41, 59, 0.75);
-  border-color: rgba(6, 182, 212, 0.4);
-  box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.25);
+  border-color: rgba(var(--color-accent-rgb), 0.45);
+  box-shadow: 0 10px 30px -10px rgba(var(--color-accent-rgb), 0.25);
   transform: translateY(-1px);
 }
 
@@ -88,17 +192,21 @@
   pointer-events: none;
 }
 
-/* Glowing Border Accents */
-.glow-cyan {
-  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.35);
+/* Twinkling ambient starfield */
+@keyframes starFloat {
+  0% { transform: translateY(0px) scale(0.8); opacity: 0.2; }
+  50% { transform: translateY(-8px) scale(1.2); opacity: 0.9; }
+  100% { transform: translateY(0px) scale(0.8); opacity: 0.2; }
 }
 
-.glow-purple {
-  box-shadow: 0 0 20px -3px rgba(168, 85, 247, 0.35);
+.star-particle {
+  animation: starFloat 4s ease-in-out infinite;
 }
 
-.glow-emerald {
-  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.35);
+/* Selection with dynamic accent */
+::selection {
+  background-color: rgba(var(--color-accent-rgb), 0.35);
+  color: #ffffff;
 }
 
 /* Custom Minimal Scrollbar */
@@ -117,5 +225,5 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: rgba(var(--color-accent-rgb), 0.6);
 }
