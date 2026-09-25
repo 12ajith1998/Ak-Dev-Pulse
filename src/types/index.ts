@@ -92,6 +92,11 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
   isThinking?: boolean;
+  modelUsed?: string;
+  fallbackNotice?: string;
+  isError?: boolean;
+  errorType?: '503' | 'quota' | 'network' | 'generic';
+  originalPrompt?: string;
 }
 
 export type SoundscapeType = 
