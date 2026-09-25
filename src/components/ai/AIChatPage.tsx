@@ -313,23 +313,39 @@ Feel free to ask a question below or click any of the starter engineering prompt
 
   return (
     <div className="max-w-5xl mx-auto space-y-4">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl bg-gradient-to-r from-slate-900 via-slate-900 to-cyan-950/40 border border-slate-800 shadow-sm">
-        <div>
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs mb-1">
-            <Brain className="w-4 h-4 text-cyan-400 animate-pulse" />
-            <span className="font-semibold tracking-wide">DEVPULSE ARCHITECT AI</span>
-            <span className="px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 text-[10px] font-medium flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-              Auto-Failover Active
+      {/* Header Banner with AI Core Visual Badge */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-cyan-950/40 border border-slate-800 shadow-sm relative overflow-hidden">
+        <div className="flex items-start sm:items-center gap-4">
+          {/* AI Core Image Avatar */}
+          <div className="relative shrink-0">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 to-purple-600 p-0.5 shadow-xl shadow-cyan-500/20">
+              <img
+                src="/assets/ai_copilot.svg"
+                alt="DevPulse AI Neural Reasoning Core"
+                referrerPolicy="no-referrer"
+                className="w-full h-full rounded-2xl object-cover bg-slate-950"
+              />
+            </div>
+            <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
             </span>
           </div>
-          <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
-            Senior Staff Architect & Copilot
-          </h2>
-          <p className="text-xs md:text-sm text-slate-400 mt-1 max-w-2xl">
-            Intelligent engineering assistant specialized in Spring Boot 3, Angular 18, PostgreSQL 16, and cloud infrastructure with high-availability model cascading.
-          </p>
+
+          <div>
+            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs mb-1">
+              <span className="font-semibold tracking-wide">DEVPULSE ARCHITECT AI</span>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 text-[10px] font-medium flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                Auto-Failover Active
+              </span>
+            </div>
+            <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
+              Senior Staff Architect & Copilot
+            </h2>
+            <p className="text-xs md:text-sm text-slate-400 mt-1 max-w-xl">
+              Intelligent engineering assistant specialized in Spring Boot 3, Angular 18, PostgreSQL 16, and cloud infrastructure with high-availability model cascading.
+            </p>
+          </div>
         </div>
 
         {/* Global Action Controls */}
@@ -346,7 +362,7 @@ Feel free to ask a question below or click any of the starter engineering prompt
 
           <button
             onClick={handleClearChat}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 border border-slate-700/60 hover:border-rose-700/60 transition-colors text-xs font-medium"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 border border-slate-700/60 hover:border-rose-700/60 transition-colors text-xs font-medium cursor-pointer"
             title="Clear all chat messages"
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -446,12 +462,21 @@ Feel free to ask a question below or click any of the starter engineering prompt
               className={`flex gap-3 group ${isAssistant ? 'justify-start' : 'justify-end'}`}
             >
               {isAssistant && (
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 border ${
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 border overflow-hidden ${
                   msg.isError
-                    ? 'bg-rose-950/80 border-rose-800 text-rose-400'
-                    : 'bg-cyan-950 border-cyan-800/80 text-cyan-400'
+                    ? 'bg-rose-950/80 border-rose-800 text-rose-400 p-1.5'
+                    : 'bg-slate-950 border-cyan-800/80 shadow-md'
                 }`}>
-                  {msg.isError ? <AlertTriangle className="w-4 h-4" /> : <Brain className="w-4 h-4" />}
+                  {msg.isError ? (
+                    <AlertTriangle className="w-4 h-4" />
+                  ) : (
+                    <img
+                      src="/assets/ai_copilot.svg"
+                      alt="DevPulse AI"
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
               )}
 

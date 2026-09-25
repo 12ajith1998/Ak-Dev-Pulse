@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="hackerBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18042b" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="30" fill="url(#hackerBg)" />
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#d946ef" stroke-width="2" stroke-dasharray="8 6" />
+  <!-- Cyberpunk Visor & Hoodie -->
+  <path d="M 40 190 C 40 135, 65 110, 100 110 C 135 110, 160 135, 160 190 Z" fill="#090514" stroke="#c026d3" stroke-width="1.5" />
+  <circle cx="100" cy="80" r="32" fill="#fed7aa" />
+  <!-- Hood silhouette -->
+  <path d="M 60 90 C 55 40, 75 30, 100 30 C 125 30, 145 40, 140 90 C 145 110, 130 115, 100 115 C 70 115, 55 110, 60 90 Z" fill="#1e1035" stroke="#e879f9" stroke-width="1.5" />
+  <!-- Neon Visor -->
+  <rect x="75" y="70" width="50" height="16" rx="4" fill="#a21caf" stroke="#f0abfc" stroke-width="2" />
+  <line x1="80" y1="78" x2="120" y2="78" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+</svg>

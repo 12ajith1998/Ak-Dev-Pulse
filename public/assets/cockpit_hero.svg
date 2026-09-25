@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#030712" />
+      <stop offset="50%" stop-color="#0b1528" />
+      <stop offset="100%" stop-color="#021f2f" />
+    </linearGradient>
+
+    <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.7" />
+    </linearGradient>
+
+    <radialGradient id="hudCenter" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.35" />
+      <stop offset="60%" stop-color="#0891b2" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <pattern id="cyberGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0891b2" stroke-width="0.75" stroke-opacity="0.15" />
+    </pattern>
+
+    <filter id="neonBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="400" fill="url(#bgGrad)" />
+
+  <!-- Perspective Floor Cyber Grid -->
+  <g opacity="0.7">
+    <rect width="1200" height="400" fill="url(#cyberGrid)" />
+  </g>
+
+  <!-- Ambient Light Core -->
+  <circle cx="950" cy="200" r="260" fill="url(#hudCenter)" filter="url(#neonBlur)" />
+  <circle cx="200" cy="80" r="180" fill="url(#hudCenter)" opacity="0.4" />
+
+  <!-- Circuit Trace Lines & Infrastructure Nodes -->
+  <g stroke="#06b6d4" stroke-width="1.5" stroke-opacity="0.4" fill="none">
+    <path d="M 50 350 L 250 350 L 320 280 L 520 280 L 580 340 L 800 340" />
+    <path d="M 150 50 L 300 50 L 380 120 L 600 120 L 680 60 L 900 60" />
+    <path d="M 750 380 L 850 280 L 1050 280 L 1150 180" />
+  </g>
+
+  <!-- Node Dots -->
+  <g fill="#22d3ee">
+    <circle cx="320" cy="280" r="4" filter="url(#neonBlur)" />
+    <circle cx="580" cy="340" r="4" />
+    <circle cx="380" cy="120" r="4" />
+    <circle cx="680" cy="60" r="5" filter="url(#neonBlur)" />
+    <circle cx="850" cy="280" r="4" />
+  </g>
+
+  <!-- Futuristic Holographic Telemetry Rings (Right Side Cockpit HUD) -->
+  <g transform="translate(950, 200)">
+    <!-- Outer dashed telemetry ring -->
+    <circle cx="0" cy="0" r="140" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-opacity="0.3" stroke-dasharray="8 6 18 4" />
+    <!-- Secondary ring -->
+    <circle cx="0" cy="0" r="105" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-opacity="0.6" stroke-dasharray="24 12" />
+    <circle cx="0" cy="0" r="75" fill="none" stroke="#10b981" stroke-width="2" stroke-opacity="0.5" stroke-dasharray="5 5" />
+    <circle cx="0" cy="0" r="40" fill="#0891b2" fill-opacity="0.1" stroke="#38bdf8" stroke-width="1.5" />
+
+    <!-- Dial Tick Marks -->
+    <line x1="0" y1="-148" x2="0" y2="-132" stroke="#22d3ee" stroke-width="2" />
+    <line x1="0" y1="148" x2="0" y2="132" stroke="#22d3ee" stroke-width="2" />
+    <line x1="-148" y1="0" x2="-132" y2="0" stroke="#22d3ee" stroke-width="2" />
+    <line x1="148" y1="0" x2="132" y2="0" stroke="#22d3ee" stroke-width="2" />
+
+    <!-- Center Crosshair & Metric -->
+    <circle cx="0" cy="0" r="5" fill="#38bdf8" />
+    <text x="0" y="5" font-family="monospace" font-size="11" font-weight="bold" fill="#67e8f9" text-anchor="middle">99.98%</text>
+    <text x="0" y="24" font-family="monospace" font-size="8" fill="#94a3b8" text-anchor="middle">UPTIME STACK</text>
+  </g>
+
+  <!-- Server Pod / Architectural Nodes Hologram (Center-Right) -->
+  <g transform="translate(680, 130)">
+    <!-- Glass Panel Backdrop -->
+    <rect x="0" y="0" width="180" height="150" rx="10" fill="#030712" fill-opacity="0.75" stroke="#1e293b" stroke-width="1.5" />
+    <rect x="0" y="0" width="180" height="24" rx="10" fill="#0f172a" fill-opacity="0.9" />
+    <circle cx="15" cy="12" r="3" fill="#f43f5e" />
+    <circle cx="26" cy="12" r="3" fill="#eab308" />
+    <circle cx="37" cy="12" r="3" fill="#10b981" />
+    <text x="52" y="16" font-family="monospace" font-size="9" fill="#94a3b8">k8s-cluster.prod</text>
+
+    <!-- Node bars -->
+    <g transform="translate(15, 38)">
+      <text x="0" y="8" font-family="monospace" font-size="8.5" fill="#38bdf8">API-GATEWAY</text>
+      <rect x="85" y="0" width="65" height="8" rx="2" fill="#1e293b" />
+      <rect x="85" y="0" width="52" height="8" rx="2" fill="#06b6d4" />
+
+      <text x="0" y="26" font-family="monospace" font-size="8.5" fill="#34d399">SPRING-AUTH</text>
+      <rect x="85" y="18" width="65" height="8" rx="2" fill="#1e293b" />
+      <rect x="85" y="18" width="45" height="8" rx="2" fill="#10b981" />
+
+      <text x="0" y="44" font-family="monospace" font-size="8.5" fill="#a78bfa">POSTGRES-POOL</text>
+      <rect x="85" y="36" width="65" height="8" rx="2" fill="#1e293b" />
+      <rect x="85" y="36" width="58" height="8" rx="2" fill="#8b5cf6" />
+
+      <text x="0" y="62" font-family="monospace" font-size="8.5" fill="#fbbf24">KAFKA-STREAM</text>
+      <rect x="85" y="54" width="65" height="8" rx="2" fill="#1e293b" />
+      <rect x="85" y="54" width="38" height="8" rx="2" fill="#f59e0b" />
+
+      <text x="0" y="80" font-family="monospace" font-size="8.5" fill="#38bdf8">REDIS-CACHE</text>
+      <rect x="85" y="72" width="65" height="8" rx="2" fill="#1e293b" />
+      <rect x="85" y="72" width="60" height="8" rx="2" fill="#06b6d4" />
+    </g>
+  </g>
+
+  <!-- Left Code Terminal Stream Card -->
+  <g transform="translate(60, 100)">
+    <rect x="0" y="0" width="320" height="210" rx="12" fill="#020617" fill-opacity="0.85" stroke="#0891b2" stroke-width="1.5" stroke-opacity="0.4" />
+    <!-- Terminal Header Bar -->
+    <rect x="0" y="0" width="320" height="28" rx="12" fill="#0f172a" fill-opacity="0.95" />
+    <circle cx="16" cy="14" r="3.5" fill="#ef4444" />
+    <circle cx="28" cy="14" r="3.5" fill="#f59e0b" />
+    <circle cx="40" cy="14" r="3.5" fill="#10b981" />
+    <text x="56" y="18" font-family="monospace" font-size="10" fill="#38bdf8">devpulse-daemon ~ zsh</text>
+
+    <!-- Terminal Code Lines -->
+    <g transform="translate(16, 45)" font-family="monospace" font-size="10" xml:space="preserve">
+      <text x="0" y="0" fill="#10b981">➜  <tspan fill="#38bdf8">devpulse</tspan> <tspan fill="#f1f5f9">sync --environment=production</tspan></text>
+      <text x="0" y="18" fill="#64748b">[*] Connecting to HikariCP cluster...</text>
+      <text x="0" y="34" fill="#a78bfa">[OK] 32 connections pool active (0 ms delay)</text>
+      <text x="0" y="50" fill="#64748b">[*] Verifying JPA EntityGraph indices...</text>
+      <text x="0" y="66" fill="#38bdf8">[OK] 0 N+1 queries detected in UserService</text>
+      <text x="0" y="82" fill="#f59e0b">[*] Standup synchronizer status: READY</text>
+      <text x="0" y="98" fill="#10b981">[✔] Auto-failover Gemini Reasoning Active</text>
+      <text x="0" y="118" fill="#38bdf8">➜  <tspan fill="#e2e8f0">ready for deep focus session</tspan> <tspan fill="#22d3ee" font-weight="bold">_</tspan></text>
+    </g>
+  </g>
+
+  <!-- Glowing Accent Cyber Line across bottom -->
+  <line x1="0" y1="398" x2="1200" y2="398" stroke="url(#cyanGlow)" stroke-width="3" filter="url(#neonBlur)" />
+</svg>

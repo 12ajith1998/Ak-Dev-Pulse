@@ -285,46 +285,64 @@ export const StandupGenerator: React.FC<StandupGeneratorProps> = ({ tasks }) => 
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl bg-gradient-to-r from-slate-900 via-slate-900/90 to-cyan-950/40 border border-slate-800">
-        <div>
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs mb-1">
-            <Clock className="w-3.5 h-3.5" />
-            <span>AGILE STANDUP COPILOT</span>
+      {/* Cockpit Visual Banner & Status Header */}
+      <div className="relative rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900/90 to-cyan-950/40 border border-slate-800 overflow-hidden shadow-xl">
+        {/* Visual Cockpit Hero Image Graphic */}
+        <div className="relative w-full h-36 sm:h-44 md:h-52 overflow-hidden border-b border-slate-800/80 group">
+          <img
+            src="/assets/cockpit_hero.svg"
+            alt="DevPulse Engineering Cockpit Banner"
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover object-center opacity-85 group-hover:scale-[1.01] transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent pointer-events-none" />
+          <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-slate-950/80 border border-cyan-500/40 backdrop-blur-md text-[10px] font-mono text-cyan-300 flex items-center gap-1.5 shadow-lg">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>COCKPIT TELEMETRY ONLINE</span>
           </div>
-          <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
-            Daily Standup & Status Synchronizer
-          </h2>
-          <p className="text-sm text-slate-400 mt-1">
-            Synthesize yesterday's wins, today's focus, and blockers. 1-click import from Kanban & AI polish for Slack.
-          </p>
         </div>
 
-        <div className="flex items-center flex-wrap gap-2">
-          <button
-            onClick={handleClearAllDraft}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800/80 hover:bg-rose-950/60 hover:border-rose-700/60 text-slate-300 hover:text-rose-300 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
-            title="Delete all inputs in draft"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Reset Draft</span>
-          </button>
+        {/* Header Controls & Titles */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5">
+          <div>
+            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs mb-1">
+              <Clock className="w-3.5 h-3.5" />
+              <span>AGILE STANDUP COPILOT</span>
+            </div>
+            <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
+              Daily Standup & Status Synchronizer
+            </h2>
+            <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+              Synthesize yesterday's wins, today's focus, and blockers. 1-click import from Kanban & AI polish for Slack.
+            </p>
+          </div>
 
-          <button
-            onClick={() => setShowHistory(!showHistory)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
-          >
-            <History className="w-3.5 h-3.5 text-cyan-400" />
-            <span>{showHistory ? 'Hide History' : 'Standup History'} ({history.length})</span>
-          </button>
+          <div className="flex items-center flex-wrap gap-2">
+            <button
+              onClick={handleClearAllDraft}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800/80 hover:bg-rose-950/60 hover:border-rose-700/60 text-slate-300 hover:text-rose-300 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
+              title="Delete all inputs in draft"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Reset Draft</span>
+            </button>
 
-          <button
-            onClick={handleSaveToHistory}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium transition-all shadow-sm cursor-pointer"
-          >
-            <Send className="w-3.5 h-3.5" />
-            <span>Archive Today's Update</span>
-          </button>
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
+            >
+              <History className="w-3.5 h-3.5 text-cyan-400" />
+              <span>{showHistory ? 'Hide History' : 'Standup History'} ({history.length})</span>
+            </button>
+
+            <button
+              onClick={handleSaveToHistory}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium transition-all shadow-sm cursor-pointer"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Archive Today's Update</span>
+            </button>
+          </div>
         </div>
       </div>
 

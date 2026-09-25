@@ -103,33 +103,49 @@ export const RelaxingMusicPlayer: React.FC<RelaxingMusicPlayerProps> = ({
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* 1. TOP HEADER & COCKPIT CONTROLS */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900/95 to-cyan-950/40 border border-slate-800 shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative overflow-hidden">
-        {/* Glow ambient background */}
-        <div className={`absolute top-0 right-1/4 w-96 h-32 blur-3xl pointer-events-none transition-all duration-700 ${
-          activeSoundscape ? 'bg-cyan-500/20' : 'bg-slate-800/10'
-        }`} />
-
-        <div className="space-y-1 relative z-10">
-          <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs">
-            <Headphones className="w-4 h-4 text-cyan-400" />
-            <span className="tracking-widest uppercase font-semibold">
-              DevPulse Audio Cockpit • 31 Synthesized Soundscapes
-            </span>
+      {/* 1. TOP HEADER & COCKPIT CONTROLS WITH VISUAL SANCTUARY BANNER */}
+      <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900/95 to-cyan-950/40 border border-slate-800 shadow-xl overflow-hidden relative">
+        {/* Visual Sanctuary Banner */}
+        <div className="relative w-full h-32 sm:h-40 md:h-48 overflow-hidden border-b border-slate-800/80">
+          <img
+            src="/assets/focus_music.svg"
+            alt="Midnight Lo-Fi Coding Sanctuary"
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover object-center opacity-80 hover:scale-[1.01] transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent pointer-events-none" />
+          <div className="absolute bottom-3 left-4 flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/80 border border-purple-500/40 backdrop-blur-md text-[11px] font-mono text-purple-300 shadow-lg">
+            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+            <span>LO-FI SANCTUARY • SYNTHESIZED PROCEDURAL HARMONICS</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-            <span>Focus Music & Neurological Soundscapes</span>
-            {activeSoundscape && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-500/40 animate-pulse">
-                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                ACTIVE PLAYBACK
-              </span>
-            )}
-          </h2>
-          <p className="text-sm text-slate-300 max-w-2xl">
-            100% procedurally synthesized Web Audio. Zero external network streams, zero ads, uninterrupted deep work flow.
-          </p>
         </div>
+
+        <div className="p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative">
+          {/* Glow ambient background */}
+          <div className={`absolute top-0 right-1/4 w-96 h-32 blur-3xl pointer-events-none transition-all duration-700 ${
+            activeSoundscape ? 'bg-cyan-500/20' : 'bg-slate-800/10'
+          }`} />
+
+          <div className="space-y-1 relative z-10">
+            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs">
+              <Headphones className="w-4 h-4 text-cyan-400" />
+              <span className="tracking-widest uppercase font-semibold">
+                DevPulse Audio Cockpit • 31 Synthesized Soundscapes
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+              <span>Focus Music & Neurological Soundscapes</span>
+              {activeSoundscape && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-500/40 animate-pulse">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  ACTIVE PLAYBACK
+                </span>
+              )}
+            </h2>
+            <p className="text-sm text-slate-300 max-w-2xl">
+              100% procedurally synthesized Web Audio. Zero external network streams, zero ads, uninterrupted deep work flow.
+            </p>
+          </div>
 
         {/* Master Control Bar */}
         <div className="flex flex-wrap items-center gap-3 bg-slate-950/90 p-2.5 rounded-2xl border border-slate-800 shadow-lg relative z-10">
@@ -190,6 +206,7 @@ export const RelaxingMusicPlayer: React.FC<RelaxingMusicPlayerProps> = ({
               <span>Stop All</span>
             </button>
           )}
+        </div>
         </div>
       </div>
 

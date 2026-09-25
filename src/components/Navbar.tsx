@@ -220,11 +220,29 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Data Backup / Restore Modal Trigger */}
           <button
             onClick={onOpenDataModal}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-mono transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer"
             title="Export / Restore JSON Data"
           >
             <Download className="w-3.5 h-3.5 text-cyan-400" />
             <span className="hidden md:inline">Backup</span>
+          </button>
+
+          {/* Quick Profile Avatar Shortcut */}
+          <button
+            onClick={() => {
+              setActiveTab('profile');
+              audioService.playBeep(900, 0.03);
+            }}
+            className="flex items-center gap-2 p-1 pl-1.5 pr-2.5 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/50 transition-all text-xs font-mono cursor-pointer group"
+            title="Developer Profile & Portfolio: Ajith Kumar"
+          >
+            <img
+              src={localStorage.getItem('devpulse_custom_avatar') || '/assets/developer_avatar.svg'}
+              alt="Developer Avatar"
+              referrerPolicy="no-referrer"
+              className="w-6 h-6 rounded-full object-cover border border-cyan-500/50 group-hover:scale-105 transition-transform"
+            />
+            <span className="hidden xl:inline text-slate-300 font-semibold group-hover:text-cyan-300">Ajith Kumar</span>
           </button>
         </div>
       </div>

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="aiCoreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="1" />
+      <stop offset="35%" stop-color="#3b82f6" stop-opacity="0.8" />
+      <stop offset="70%" stop-color="#8b5cf6" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#020617" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="neonEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="50%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+
+    <filter id="coreGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Deep Void Background -->
+  <rect width="400" height="400" rx="40" fill="#020617" />
+  
+  <!-- Subtle Hex Grid Backdrop -->
+  <g stroke="#0e7490" stroke-width="0.8" stroke-opacity="0.15" fill="none">
+    <polygon points="200,60 230,77 230,112 200,129 170,112 170,77" />
+    <polygon points="200,140 230,157 230,192 200,209 170,192 170,157" />
+    <polygon points="135,97 165,114 165,149 135,166 105,149 105,114" />
+    <polygon points="265,97 295,114 295,149 265,166 235,149 235,114" />
+    <polygon points="200,220 230,237 230,272 200,289 170,272 170,237" />
+    <polygon points="135,177 165,194 165,229 135,246 105,229 105,194" />
+    <polygon points="265,177 295,194 295,229 265,246 235,229 235,194" />
+  </g>
+
+  <!-- Synaptic Network Rays -->
+  <g stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.4" fill="none">
+    <line x1="200" y1="200" x2="80" y2="80" stroke-dasharray="4 4" />
+    <line x1="200" y1="200" x2="320" y2="80" stroke-dasharray="4 4" />
+    <line x1="200" y1="200" x2="80" y2="320" stroke-dasharray="4 4" />
+    <line x1="200" y1="200" x2="320" y2="320" stroke-dasharray="4 4" />
+    <line x1="200" y1="200" x2="200" y2="40" />
+    <line x1="200" y1="200" x2="40" y2="200" />
+    <line x1="200" y1="200" x2="360" y2="200" />
+    <line x1="200" y1="200" x2="200" y2="360" />
+  </g>
+
+  <!-- Peripheral Synapse Nodes -->
+  <circle cx="80" cy="80" r="5" fill="#34d399" filter="url(#coreGlow)" />
+  <circle cx="320" cy="80" r="5" fill="#38bdf8" filter="url(#coreGlow)" />
+  <circle cx="80" cy="320" r="5" fill="#a78bfa" filter="url(#coreGlow)" />
+  <circle cx="320" cy="320" r="5" fill="#34d399" filter="url(#coreGlow)" />
+
+  <!-- Core Radiant Glow -->
+  <circle cx="200" cy="200" r="140" fill="url(#aiCoreGlow)" />
+
+  <!-- Quantum Orbital Rings -->
+  <!-- Outer Ring (Inclined) -->
+  <ellipse cx="200" cy="200" rx="130" ry="50" fill="none" stroke="url(#ringGrad)" stroke-width="2.5" transform="rotate(-30 200 200)" filter="url(#coreGlow)" />
+  <ellipse cx="200" cy="200" rx="130" ry="50" fill="none" stroke="url(#ringGrad)" stroke-width="2.5" transform="rotate(30 200 200)" filter="url(#coreGlow)" />
+  
+  <!-- Counter-rotating Node on Orbital Ring -->
+  <circle cx="100" cy="150" r="6" fill="#22d3ee" filter="url(#coreGlow)" />
+  <circle cx="300" cy="250" r="6" fill="#a855f7" filter="url(#coreGlow)" />
+
+  <!-- Inner Crystalline Neural Core (Octahedron / Diamond) -->
+  <polygon points="200,105 270,175 200,245 130,175" fill="#0f172a" stroke="#22d3ee" stroke-width="2.5" fill-opacity="0.8" />
+  <polygon points="200,135 245,180 200,225 155,180" fill="#0284c7" stroke="#38bdf8" stroke-width="2" fill-opacity="0.6" />
+  <polygon points="200,155 225,180 200,205 175,180" fill="#f8fafc" filter="url(#coreGlow)" />
+
+  <!-- Brain Synaptic Polyline in Center -->
+  <g stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" fill="none">
+    <path d="M 185 200 C 185 180, 195 180, 195 195 C 195 210, 205 210, 205 190 C 205 175, 215 175, 215 195" />
+  </g>
+
+  <!-- Floating Logic Sparks -->
+  <circle cx="160" cy="140" r="3" fill="#67e8f9" />
+  <circle cx="240" cy="140" r="3" fill="#34d399" />
+  <circle cx="250" cy="230" r="3" fill="#c084fc" />
+  <circle cx="150" cy="230" r="3" fill="#38bdf8" />
+
+  <!-- Bottom Badge: Gemini Thinking Core -->
+  <g transform="translate(110, 345)">
+    <rect x="0" y="0" width="180" height="28" rx="14" fill="#030712" stroke="#0ea5e9" stroke-width="1.5" />
+    <circle cx="18" cy="14" r="4" fill="#10b981" filter="url(#coreGlow)" />
+    <text x="32" y="18" font-family="monospace" font-size="10.5" font-weight="bold" fill="#38bdf8">GEMINI 3.1 REASONING</text>
+  </g>
+</svg>
