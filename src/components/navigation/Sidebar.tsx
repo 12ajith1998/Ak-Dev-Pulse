@@ -22,7 +22,10 @@ import {
   Flame,
   Radio,
   HeartPulse,
-  User
+  User,
+  Globe,
+  Code2,
+  Workflow
 } from 'lucide-react';
 import { audioService } from '../../services/audioService';
 
@@ -70,9 +73,17 @@ const NAV_CATEGORIES: NavCategory[] = [
     ],
   },
   {
-    category: 'AI & Engineering',
+    category: 'Engineering & Architecture',
     items: [
+      { id: 'api-client', label: 'API Workbench', icon: Globe, badge: 'REST', shortcut: 'w' },
+      { id: 'snippets', label: 'Git & Snippets', icon: Code2, badge: 'Stash', shortcut: 's' },
+      { id: 'diagrams', label: 'System Topology', icon: Workflow, badge: 'Flow', shortcut: 'd' },
       { id: 'ai-chat', label: 'AI Copilot', icon: MessageSquareCode, badge: 'Thinking', shortcut: '9' },
+    ],
+  },
+  {
+    category: 'Developer Identity',
+    items: [
       { id: 'profile', label: 'Developed By', icon: User, badge: 'Ajith', shortcut: '0' },
     ],
   },
@@ -235,15 +246,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             <span className="truncate">{item.label}</span>
 
                             <div className="flex items-center gap-1.5">
-                              {item.badge && (
-                                <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono border ${
-                                  item.badge === 'Thinking' 
-                                    ? 'bg-cyan-950 text-cyan-300 border-cyan-800' 
-                                    : 'bg-emerald-950 text-emerald-300 border-emerald-800'
-                                }`}>
-                                  {item.badge}
-                                </span>
-                              )}
+                                {item.badge && (
+                                  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono border font-semibold ${
+                                    item.badge === 'Flow'
+                                      ? 'bg-cyan-950/90 text-cyan-300 border-cyan-500/60 shadow-[0_0_8px_rgba(6,182,212,0.25)]'
+                                      : item.badge === 'REST'
+                                      ? 'bg-emerald-950/90 text-emerald-300 border-emerald-700/60'
+                                      : item.badge === 'Stash'
+                                      ? 'bg-amber-950/90 text-amber-300 border-amber-700/60'
+                                      : item.badge === 'Thinking' 
+                                      ? 'bg-cyan-950 text-cyan-300 border-cyan-800' 
+                                      : item.badge === 'Ajith'
+                                      ? 'bg-purple-950/90 text-purple-300 border-purple-700/60'
+                                      : 'bg-emerald-950 text-emerald-300 border-emerald-800'
+                                  }`}>
+                                    {item.badge}
+                                  </span>
+                                )}
                               <kbd className="hidden group-hover:inline-block px-1.5 py-0.2 rounded bg-slate-800 text-[10px] text-slate-500 font-mono">
                                 {item.shortcut}
                               </kbd>

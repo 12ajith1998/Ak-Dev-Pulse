@@ -19,6 +19,9 @@ import { ReminderAlertModal } from './components/reminders/ReminderAlertModal';
 import { TimerModule } from './components/timer/TimerModule';
 import { AlarmManager } from './components/alarm/AlarmManager';
 import { RelaxingMusicPlayer } from './components/music/RelaxingMusicPlayer';
+import { ApiWorkbench } from './components/api/ApiWorkbench';
+import { SnippetVault } from './components/snippets/SnippetVault';
+import { ArchitectureStudio } from './components/diagrams/ArchitectureStudio';
 import { AIChatPage } from './components/ai/AIChatPage';
 import { DeveloperProfile } from './components/profile/DeveloperProfile';
 import { DataModal } from './components/modals/DataModal';
@@ -95,6 +98,37 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('devpulse_sidebar_collapsed', JSON.stringify(isSidebarCollapsed));
   }, [isSidebarCollapsed]);
+
+  // Dynamic Browser Tab Title synchronized with active module, focus timer, and soundscapes
+  useEffect(() => {
+    const tabLabels: Record<TabType, string> = {
+      standup: 'Standup Sync',
+      checklist: 'Deployment Checklist',
+      todos: 'Task Kanban',
+      calculator: 'Dev Calculator',
+      reminders: 'Smart Reminders',
+      timer: 'Focus Timer',
+      alarm: 'Routine Alarms',
+      music: 'Focus Soundscapes',
+      'api-client': 'REST Workbench',
+      snippets: 'Git & Snippets',
+      diagrams: 'Architecture Flow',
+      'ai-chat': 'AI Copilot',
+      profile: 'Developer Profile',
+    };
+
+    const currentLabel = tabLabels[currentTab] || 'IT Cockpit';
+
+    if (isTimerRunning && activeTimerSeconds !== null) {
+      const mins = Math.floor(activeTimerSeconds / 60);
+      const secs = (activeTimerSeconds % 60).toString().padStart(2, '0');
+      document.title = `(${mins}:${secs}) ${currentLabel} • DevPulse`;
+    } else if (activeSoundscape) {
+      document.title = `♪ ${currentLabel} • DevPulse Cockpit`;
+    } else {
+      document.title = `${currentLabel} | DevPulse - Daily IT Engineer Cockpit`;
+    }
+  }, [currentTab, isTimerRunning, activeTimerSeconds, activeSoundscape]);
 
   // Load initial workspace data
   useEffect(() => {
@@ -392,6 +426,18 @@ export default function App() {
               activeSoundscape={activeSoundscape}
               setActiveSoundscape={setActiveSoundscape}
             />
+          )}
+
+          {currentTab === 'api-client' && (
+            <ApiWorkbench />
+          )}
+
+          {currentTab === 'snippets' && (
+            <SnippetVault />
+          )}
+
+          {currentTab === 'diagrams' && (
+            <ArchitectureStudio />
           )}
 
           {currentTab === 'ai-chat' && (

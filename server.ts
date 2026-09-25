@@ -312,6 +312,78 @@ Also include a 1-sentence executive summary suitable for a manager or async Slac
   }
 });
 
+// System Health & Telemetry endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'UP',
+    service: 'DevPulse Cockpit Backend',
+    uptimeSeconds: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+    nodeVersion: process.version,
+    memoryUsageMB: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+  });
+});
+
+// REST & Webhook Workbench Proxy (bypasses CORS restrictions for internal/external APIs)
+app.post('/api/proxy', async (req, res) => {
+  const startTime = Date.now();
+  try {
+    const { url, method = 'GET', headers = {}, body } = req.body;
+    if (!url) {
+      return res.status(400).json({ error: 'URL parameter is required' });
+    }
+
+    const cleanHeaders = { ...headers };
+    // Remove host headers that might cause conflict
+    delete cleanHeaders['host'];
+    delete cleanHeaders['Host'];
+
+    const fetchOptions: RequestInit = {
+      method: method.toUpperCase(),
+      headers: cleanHeaders,
+    };
+
+    if (body && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method.toUpperCase())) {
+      fetchOptions.body = typeof body === 'string' ? body : JSON.stringify(body);
+    }
+
+    const upstreamResponse = await fetch(url, fetchOptions);
+    const latencyMs = Date.now() - startTime;
+    const contentType = upstreamResponse.headers.get('content-type') || '';
+
+    let responseData: any;
+    if (contentType.includes('application/json')) {
+      try {
+        responseData = await upstreamResponse.json();
+      } catch {
+        responseData = await upstreamResponse.text();
+      }
+    } else {
+      responseData = await upstreamResponse.text();
+    }
+
+    const responseHeaders: Record<string, string> = {};
+    upstreamResponse.headers.forEach((val, key) => {
+      responseHeaders[key] = val;
+    });
+
+    res.json({
+      status: upstreamResponse.status,
+      statusText: upstreamResponse.statusText,
+      headers: responseHeaders,
+      data: responseData,
+      latencyMs,
+      sizeBytes: typeof responseData === 'string' ? responseData.length : JSON.stringify(responseData).length,
+    });
+  } catch (err: any) {
+    const latencyMs = Date.now() - startTime;
+    res.status(502).json({
+      error: err.message || 'Failed to proxy request',
+      latencyMs,
+    });
+  }
+});
+
 // Setup Vite middleware in dev or static files in production
 async function startServer() {
   if (!isProd) {

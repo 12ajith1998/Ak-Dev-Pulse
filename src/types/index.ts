@@ -7,6 +7,9 @@ export type TabType =
   | 'alarm'
   | 'music'
   | 'calculator'
+  | 'api-client'
+  | 'snippets'
+  | 'diagrams'
   | 'ai-chat'
   | 'profile';
 

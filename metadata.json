@@ -1,6 +1,6 @@
 {
   "name": "DevPulse - Daily IT Engineer Cockpit",
-  "description": "All-in-one daily workspace for IT engineers featuring standup updates, task kanban, dev calculators, deployment checklists, focus timer, alarms, relaxing ambient music, and AI reasoning agent.",
+  "description": "All-in-one daily workspace for IT engineers featuring standup updates, task kanban, REST API workbench, Git copilot & code snippets, system architecture flow studio, dev calculators, deployment checklists, focus timer, alarms, ambient soundscapes, and AI reasoning agent.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

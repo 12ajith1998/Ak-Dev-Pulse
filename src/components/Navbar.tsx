@@ -43,6 +43,9 @@ const TAB_TITLES: Record<TabType, { name: string; category: string }> = {
   'timer': { name: 'Focus Pomodoro', category: 'Toolkit' },
   'alarm': { name: 'Routine Alarms', category: 'Toolkit' },
   'music': { name: 'Focus Soundscapes', category: 'Focus' },
+  'api-client': { name: 'REST & Webhook Workbench', category: 'Engineering' },
+  'snippets': { name: 'Git & Snippet Stash', category: 'Engineering' },
+  'diagrams': { name: 'Architecture & Flow Studio', category: 'Engineering' },
   'ai-chat': { name: 'AI Copilot (Thinking)', category: 'Engineering' },
   'profile': { name: 'Developed By: Ajith Kumar', category: 'About Developer' },
 };
