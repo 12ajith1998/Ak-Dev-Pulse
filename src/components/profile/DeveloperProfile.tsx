@@ -19,7 +19,9 @@ import {
   Trash2,
   Check,
   X,
-  Image as ImageIcon
+  Image as ImageIcon,
+  FileText,
+  Download
 } from 'lucide-react';
 import { audioService } from '../../services/audioService';
 
@@ -32,9 +34,12 @@ const PRESET_AVATARS = [
 
 export const DeveloperProfile: React.FC = () => {
   const portfolioUrl = 'https://ajith-kumar-dev.netlify.app/';
+  const resumeViewUrl = 'https://ajith-kumar-dev.netlify.app/Ajith_Kumar_Resume_View.pdf';
+  const resumeDownloadUrl = 'https://ajith-kumar-dev.netlify.app/Ajith_Kumar_Resume.pdf';
   const email = '12ajith1998@gmail.com';
   const [iframeKey, setIframeKey] = useState<number>(0);
   const [iframeLoading, setIframeLoading] = useState<boolean>(true);
+  const [activeFrameTab, setActiveFrameTab] = useState<'portfolio' | 'resume'>('portfolio');
 
   // Avatar state with LocalStorage persistence
   const [currentAvatar, setCurrentAvatar] = useState<string>(() => {
@@ -58,10 +63,35 @@ export const DeveloperProfile: React.FC = () => {
     window.open(portfolioUrl, '_blank', 'noopener,noreferrer');
   };
 
+  const handleOpenResume = () => {
+    audioService.playSuccessTone();
+    window.open(resumeViewUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleDownloadResume = () => {
+    audioService.playSuccessTone();
+    const link = document.createElement('a');
+    link.href = resumeDownloadUrl;
+    link.download = 'Ajith_Kumar_Resume.pdf';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleReloadIframe = () => {
     setIframeLoading(true);
     setIframeKey((prev) => prev + 1);
     audioService.playBeep(750, 0.04);
+  };
+
+  const handleSwitchFrameTab = (tab: 'portfolio' | 'resume') => {
+    if (tab === activeFrameTab) return;
+    setActiveFrameTab(tab);
+    setIframeLoading(true);
+    setIframeKey((prev) => prev + 1);
+    audioService.playBeep(tab === 'resume' ? 880 : 700, 0.04);
   };
 
   const handleSelectPreset = (url: string) => {
@@ -202,11 +232,30 @@ export const DeveloperProfile: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Action Button */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+          {/* Quick Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+            <button
+              onClick={handleOpenResume}
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-800/90 hover:bg-slate-750 text-cyan-300 hover:text-white border border-cyan-700/60 font-semibold text-xs tracking-wide shadow-lg shadow-cyan-900/20 active:scale-95 transition-all cursor-pointer"
+              title="Open Resume PDF in new tab"
+            >
+              <FileText className="w-4 h-4 text-cyan-400" />
+              <span>View Resume (PDF)</span>
+              <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
+            </button>
+
+            <button
+              onClick={handleDownloadResume}
+              className="flex items-center justify-center gap-1.5 px-3.5 py-3 rounded-xl bg-slate-800/60 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-medium text-xs tracking-wide transition-all cursor-pointer"
+              title="Direct download resume PDF file"
+            >
+              <Download className="w-4 h-4 text-slate-400" />
+              <span className="hidden sm:inline">Download</span>
+            </button>
+
             <button
               onClick={handleOpenPortfolio}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs tracking-wide shadow-xl shadow-cyan-500/25 active:scale-95 transition-all cursor-pointer"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs tracking-wide shadow-xl shadow-cyan-500/25 active:scale-95 transition-all cursor-pointer"
             >
               <span>Visit Portfolio Site</span>
               <ArrowUpRight className="w-4 h-4 text-slate-950" />
@@ -364,43 +413,139 @@ export const DeveloperProfile: React.FC = () => {
         </div>
       )}
 
-      {/* 2. LIVE INTERACTIVE EMBEDDED PORTFOLIO VIEWER */}
+      {/* 2. LIVE INTERACTIVE EMBEDDED PORTFOLIO & RESUME VIEWER */}
       <div className="rounded-3xl bg-slate-900 border border-slate-800 overflow-hidden shadow-2xl flex flex-col">
         {/* Iframe Top Toolbar */}
-        <div className="px-5 py-3.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            {/* Window Traffic Dots */}
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+        <div className="px-5 py-3 bg-slate-950 border-b border-slate-800 flex flex-col gap-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Window Traffic Dots */}
+              <div className="flex items-center gap-1.5 mr-1">
+                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+              </div>
+
+              {/* View Switcher Tabs */}
+              <div className="flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800">
+                <button
+                  onClick={() => handleSwitchFrameTab('portfolio')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
+                    activeFrameTab === 'portfolio'
+                      ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                  title="View live portfolio website"
+                >
+                  <Globe className="w-3.5 h-3.5" />
+                  <span>Live Portfolio</span>
+                </button>
+
+                <button
+                  onClick={() => handleSwitchFrameTab('resume')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
+                    activeFrameTab === 'resume'
+                      ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                  title="View embedded PDF resume"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Resume (PDF)</span>
+                </button>
+              </div>
+
+              {/* URL Browser Bar */}
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 min-w-[260px] max-w-md">
+                {activeFrameTab === 'portfolio' ? (
+                  <Globe className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                ) : (
+                  <FileText className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                )}
+                <span className="truncate">{activeFrameTab === 'portfolio' ? portfolioUrl : resumeViewUrl}</span>
+              </div>
             </div>
 
-            {/* URL Browser Bar */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 min-w-[280px]">
-              <Globe className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span className="truncate">{portfolioUrl}</span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleReloadIframe}
+                className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                title="Reload Frame"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
+
+              {activeFrameTab === 'resume' ? (
+                <>
+                  <button
+                    onClick={handleDownloadResume}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-850 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                    title="Download resume PDF"
+                  >
+                    <Download className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Download</span>
+                  </button>
+
+                  <button
+                    onClick={handleOpenResume}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-800 text-cyan-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                    title="Open Resume PDF in external tab"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Open External</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleOpenResume}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-850 hover:bg-slate-800 border border-slate-700 text-cyan-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                    title="Open Resume directly in external tab"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Resume PDF</span>
+                    <ArrowUpRight className="w-3 h-3 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={handleOpenPortfolio}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-800 text-cyan-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                    title="Open full page in new tab"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Open External</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleReloadIframe}
-              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
-              title="Reload Frame"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              onClick={handleOpenPortfolio}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-800 text-cyan-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
-              title="Open full page in new tab"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Open External</span>
-            </button>
-          </div>
+          {/* Quick Notice helper when viewing Resume PDF */}
+          {activeFrameTab === 'resume' && (
+            <div className="pt-2 border-t border-slate-900 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-slate-400">
+              <span className="flex items-center gap-1.5 text-cyan-300">
+                <FileText className="w-3 h-3 text-cyan-400" />
+                <span>Viewing Ajith Kumar Resume (PDF). In-browser preview active.</span>
+              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleOpenResume}
+                  className="text-cyan-400 hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Open in external tab</span>
+                  <ArrowUpRight className="w-3 h-3" />
+                </button>
+                <span>•</span>
+                <button
+                  onClick={handleDownloadResume}
+                  className="text-slate-300 hover:text-white hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Download className="w-3 h-3 text-slate-400" />
+                  <span>Download file</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Embedded Iframe Container */}
@@ -408,17 +553,19 @@ export const DeveloperProfile: React.FC = () => {
           {iframeLoading && (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-slate-950/90 backdrop-blur-sm gap-3">
               <div className="w-10 h-10 border-2 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin" />
-              <p className="text-xs font-mono text-slate-400">Loading Ajith Kumar's Portfolio...</p>
+              <p className="text-xs font-mono text-slate-400">
+                {activeFrameTab === 'portfolio' ? "Loading Ajith Kumar's Portfolio..." : "Loading Ajith Kumar's Resume..."}
+              </p>
             </div>
           )}
 
           <iframe
-            key={iframeKey}
-            src={portfolioUrl}
-            title="Ajith Kumar Developer Portfolio"
+            key={`${activeFrameTab}-${iframeKey}`}
+            src={activeFrameTab === 'portfolio' ? portfolioUrl : resumeViewUrl}
+            title={activeFrameTab === 'portfolio' ? "Ajith Kumar Developer Portfolio" : "Ajith Kumar Developer Resume"}
             className="w-full h-full border-0 bg-white"
             onLoad={() => setIframeLoading(false)}
-            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-downloads allow-forms allow-modals allow-top-navigation-by-user-activation"
           />
         </div>
       </div>
